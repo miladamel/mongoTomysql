@@ -2,7 +2,8 @@
  const {MongoClient} = require('mongodb');
  const mysql = require("mysql");
 
- function mongoCon() {
+
+//mongodb connection and fetch data
  	const connectionParams = {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -26,12 +27,23 @@
 
     const filter = {};
     const all = User.find({}, function(err, docs) {
+       
         if(err) console.log(err);
-        else console.log({users: docs});
+       else {
+        for(var i = 0; i < docs.length; i++) {
+            //console.log(docs[i].firstName);
+            db.query('INSERT INTO User (first, last, phno, email)  VALUES (?)',[[docs[i].firstName,docs[i].lastName,docs[i].number,docs[i].email]], (error, result) => {
+                if (result) {
+                    console.log('db migration successfully');
+                } else {
+                    console.log(error);
+                }
+            })
+        } 
+       }
     });
-}
 
-function mysqlCon() {
+//mysql connection
     const db = mysql.createConnection({
         host: 'localhost',
         user : 'root',
@@ -45,15 +57,15 @@ function mysqlCon() {
         } else {
             console.log('mysql connected');
         };
-    });
-    
- 
-}
+    });     
 
-mongoCon();
-mysqlCon();
+    for (let i = 0; i < 0 ;i++) {
+        const element = array[i];
+        db.query('INSERT INTO User (first) VALUES (?)', [[firstName]],(error, result) => {
+            if(error) console.log(error);
+            else console.log('Done')
+        })
+    }
 
-for (let index = 0; index < array.length; index++) {
-    const element = array[index];
-    
-}
+
+
